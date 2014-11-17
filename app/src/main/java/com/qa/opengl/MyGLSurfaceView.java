@@ -19,7 +19,6 @@ import android.content.Context;
 import android.opengl.GLSurfaceView;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.MotionEvent;
 
 /**
  * A view container where OpenGL ES graphics can be drawn on screen.
@@ -41,9 +40,11 @@ public class MyGLSurfaceView extends GLSurfaceView {
         setRenderer(mRenderer);
 
         // Render the view only when there is a change in the drawing data
-        setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
+        setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
 
         // Request focus, otherwise key/button won't react
+        // This two lines are mandatory for Recon Product,
+        // Otherwise, the remote or the OFMy will not react
         this.requestFocus();
         this.setFocusableInTouchMode(true);
     }
@@ -87,7 +88,7 @@ public class MyGLSurfaceView extends GLSurfaceView {
     }
 
 
-    @Override
+    /*@Override
     public boolean onTouchEvent(MotionEvent e) {
         // MotionEvent reports input details from the touch screen
         // and other input controls. In this case, you are only
@@ -116,6 +117,6 @@ public class MyGLSurfaceView extends GLSurfaceView {
         mPreviousX = x;
         mPreviousY = y;
         return true;
-    }
+    }*/
 
 }

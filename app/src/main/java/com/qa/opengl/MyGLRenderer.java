@@ -18,6 +18,7 @@ package com.qa.opengl;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
+import android.os.SystemClock;
 import android.util.Log;
 
 import javax.microedition.khronos.egl.EGLConfig;
@@ -47,6 +48,10 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
     private final float[] mRotationMatrix = new float[16];
 
     private float mAngle;
+    private float scaleX;
+    private float scaleY;
+    private float scaleZ;
+    private int factor;
 
     @Override
     public void onSurfaceCreated(GL10 unused, EGLConfig config) {
@@ -57,12 +62,14 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         mTriangle = new Triangle();
         mSquare   = new Square();
         mCircle   = new Circle();
+        scaleX = scaleY = scaleZ = 1.0f;
+        factor = -200;
     }
 
     @Override
     public void onDrawFrame(GL10 unused) {
         float[] scratch = new float[16];
-
+        float[] squarescale = new float[16];
         // Draw background color
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
 
@@ -72,18 +79,27 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         // Calculate the projection and view transformation
         Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
 
+        factor++;
+        scaleX = 1.0f + 0.001f * (factor);
+        scaleY = 1.0f + 0.001f * (factor);
+        scaleZ = 1.0f + 0.001f * (factor);
+        Matrix.scaleM(squarescale, 0, mMVPMatrix, 0, scaleX, scaleY, scaleZ);
+        if (factor == 200) {
+            factor = -200;
+        }
+
         // Draw square
-        mSquare.draw(mMVPMatrix);
+        mSquare.draw(squarescale);
         mCircle.draw(mMVPMatrix);
 
         // Create a rotation for the triangle
 
         // Use the following code to generate constant rotation.
         // Leave this code out when using TouchEvents.
-        // long time = SystemClock.uptimeMillis() % 4000L;
-        // float angle = 0.090f * ((int) time);
+        long time = SystemClock.uptimeMillis() % 4000L;
+        float angle = 0.090f * ((int) time);
 
-        Matrix.setRotateM(mRotationMatrix, 0, mAngle, 0, 0, 1.0f);
+        Matrix.setRotateM(mRotationMatrix, 0, angle, 0, 0, 1.0f);
 
         // Combine the rotation matrix with the projection and camera view
         // Note that the mMVPMatrix factor *must be first* in order

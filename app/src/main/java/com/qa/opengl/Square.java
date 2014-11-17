@@ -15,12 +15,12 @@
  */
 package com.qa.opengl;
 
+import android.opengl.GLES20;
+
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
-
-import android.opengl.GLES20;
 
 /**
  * A two-dimensional square for use as a drawn object in OpenGL ES 2.0.
@@ -147,5 +147,4 @@ public class Square {
         // Disable vertex array
         GLES20.glDisableVertexAttribArray(mPositionHandle);
     }
-
 }
